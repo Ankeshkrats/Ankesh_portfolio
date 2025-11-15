@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Professional portfolio of [Your Name] - Web Developer showcasing projects and skills.">
+    <title>Your Name - Portfolio</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; transition: background-color 0.3s, color 0.3s; }
+        #threejs-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+        .content { position: relative; z-index: 1; padding: 2rem; }
+        .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s, transform 0.6s; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+        .progress-bar { width: 0%; height: 8px; background: #3b82f6; transition: width 1s ease-in-out; }
+        .testimonial-slider { display: flex; overflow: hidden; }
+        .testimonial { min-width: 100%; transition: transform 0.5s; }
+        .loading { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; align-items: center; justify-content: center; z-index: 9999; }
+        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+    <div id="loading" class="loading"><div class="spinner"></div></div>
+    <div id="threejs-container"></div>
+    <button id="theme-toggle" class="fixed top-4 right-4 bg-blue-500 text-white p-2 rounded-full z-10" aria-label="Toggle theme">🌙</button>
+    <div class="content">
+        <header class="text-center py-10 fade-in">
+            <h1 class="text-4xl font-bold">Your Name</h1>
+            <p class="text-xl mt-2">Web Developer | Designer</p>
+        </header>
+        <section id="about" class="my-10 fade-in">
+            <h2 class="text-2xl font-semibold mb-4">About Me</h2>
+            <p>Your bio here. Passionate about creating interactive web experiences.</p>
+            <img src="https://source.unsplash.com/random/400x300?tech" alt="Cool tech image" class="rounded-lg mt-4 hover:scale-105 transition-transform">
+        </section>
+        <section id="skills" class="my-10 fade-in">
+            <h2 class="text-2xl font-semibold mb-4">Skills</h2>
+            <div class="space-y-4">
+                <div><span>HTML</span><div class="bg-gray-700 rounded-full"><div class="progress-bar" style="width: 90%;"></div></div></div>
+                <div><span>CSS</span><div class="bg-gray-700 rounded-full"><div class="progress-bar" style="width: 85%;"></div></div></div>
+                <div><span>JavaScript</span><div class="bg-gray-700 rounded-full"><div class="progress-bar" style="width: 80%;"></div></div></div>
+                <!-- Add more skills -->
+            </div>
+        </section>
+        <section id="projects" class="my-10 fade-in">
+            <h2 class="text-2xl font-semibold mb-4">Projects</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-gray-800 p-4 rounded hover:bg-gray-700 transition">
+                    <h3>Project 1</h3>
+                    <p>Description.</p>
+                    <img src="https://source.unsplash.com/random/300x200?code" alt="Project image" class="rounded mt-2 hover:grayscale-0 grayscale transition">
+                </div>
+                <!-- Add more projects -->
+            </div>
+        </section>
+        <section id="testimonials" class="my-10 fade-in">
+            <h2 class="text-2xl font-semibold mb-4">Testimonials</h2>
+            <div class="testimonial-slider">
+                <div class="testimonial"><p>"Great work!" - Client A</p></div>
+                <div class="testimonial"><p>"Highly recommend." - Client B</p></div>
+            </div>
+            <button id="prev-testimonial" class="mt-4 mr-2 bg-blue-500 p-2 rounded">Prev</button>
+            <button id="next-testimonial" class="mt-4 bg-blue-500 p-2 rounded">Next</button>
+        </section>
+        <section id="contact" class="my-10 fade-in">
+            <h2 class="text-2xl font-semibold mb-4">Contact</h2>
+            <form id="contact-form">
+                <input type="text" name="name" placeholder="Name" class="w-full p-2 mb-4 bg-gray-800 rounded" required>
+                <input type="email" name="email" placeholder="Email" class="w-full p-2 mb-4 bg-gray-800 rounded" required>
+                <textarea name="message" placeholder="Message" class="w-full p-2 mb-4 bg-gray-800 rounded" required></textarea>
+                <button type="submit" class="bg-blue-500 p-2 rounded">Send</button>
+            </form>
+        </section>
+        <footer class="text-center py-10">
+            <p>&copy; 2023 Your Name. <a href="#" class="text-blue-400">Download Resume</a></p>
+        </footer>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script>
+        // Loading animation
+        window.addEventListener('load', () => {
+            document.getElementById('loading').style.display = 'none';
+        });
+
+        // Theme toggle
+        const toggle = document.getElementById('theme-toggle');
+        toggle.addEventListener('click', () => {
+            document.body.classList.toggle('bg-gray-900');
+            document.body.classList.toggle('text-white');
+            document.body.classList.toggle('bg-white');
+            document.body.classList.toggle('text-black');
+            toggle.textContent = document.body.classList.contains('bg-white') ? '🌞' : '🌙';
+        });
+
+        // 3D Scene with Controls
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('threejs-container').appendChild(renderer.domElement);
+
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+
+        for (let i = 0; i < 50; i++) {
+            const geometry = new THREE.BoxGeometry(1, 1, 1);
+            const material = new THREE.MeshBasicMaterial({ color: Math.random() * 0xffffff });
+            const cube = new THREE.Mesh(geometry, material);
+            cube.position.set(Math.random() * 20 - 10, Math.random() * 20 - 10, Math.random() * 20 - 10);
+            scene.add(cube);
+        }
+        camera.position.z = 5;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        });
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // Progress bars animation
+        const progressBars = document.querySelectorAll('.progress-bar');
+        const skillsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.width = entry.target.style.width; // Trigger animation
+                }
+            });
+        });
+        progressBars.forEach(bar => skillsObserver.observe(bar));
+
+        // Testimonials slider
+        let currentTestimonial = 0;
+        const testimonials = document.querySelectorAll('.testimonial');
+        document.getElementById('next-testimonial').addEventListener('click', () => {
+            currentTestimonial = (currentTestimonial + 1) % testimonials.length;
+            document.querySelector('.testimonial-slider').style.transform = `translateX(-${currentTestimonial * 100}%)`;
+        });
+        document.getElementById('prev-testimonial').addEventListener('click', () => {
+            currentTestimonial = (currentTestimonial - 1 + testimonials.length) % testimonials.length;
+            document.querySelector('.testimonial-slider').style.transform = `translateX(-${currentTestimonial * 100}%)`;
+        });
+
+        // Contact form with EmailJS
+        emailjs.init('YOUR_USER_ID'); // Replace with your EmailJS user ID
+        document.getElementById('contact-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', e.target)
+                .then(() => alert('Message sent!'))
+                .catch(() => alert('Error sending message.'));
+        });
+
+        // Responsive resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
